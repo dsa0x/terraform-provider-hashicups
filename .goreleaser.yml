@@ -39,10 +39,16 @@ checksum:
   name_template: "{{ .ProjectName }}_{{ .Version }}_SHA256SUMS"
   algorithm: sha256
 signs:
-- cmd: cosign
-  stdin: '{{ .Env.COSIGN_PASSWORD }}'
-  args: ["sign-blob", "--key=cosign.key", "--output-signature=${signature}", "${artifact}"]
-  artifacts: all
+  - cmd: cosign
+    stdin: "{{ .Env.COSIGN_PASSWORD }}"
+    args:
+      [
+        "sign-blob",
+        "--key=${{ .Env.COSIGN_KEY }}",
+        "--output-signature=${signature}",
+        "${artifact}",
+      ]
+    artifacts: all
 release:
   extra_files:
     - glob: "terraform-registry-manifest.json"
