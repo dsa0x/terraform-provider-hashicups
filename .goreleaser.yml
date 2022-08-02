@@ -45,7 +45,7 @@ signs:
       [
         "sign-blob",
         "--key",
-        "{{ secrets.COSIGN_PRIVATE_KEY }}",
+        "{{ .Env.COSIGN_PRIVATE_KEY }}",
         "--output-signature=${signature}",
         "${artifact}",
       ]
