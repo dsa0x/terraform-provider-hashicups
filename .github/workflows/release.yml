@@ -33,7 +33,7 @@ jobs:
         uses: sigstore/cosign-installer@main
       - name: Check cosign install!
         run: cosign version
-      - name: generate key
+      - name: Fetch key
         shell: bash
         run: 'echo "$COSIGN_PRIVATE_KEY" > cosign.key'
         env:
