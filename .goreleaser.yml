@@ -48,7 +48,7 @@ signs:
         "--output-signature=${signature}",
         "${artifact}",
       ]
-    artifacts: all
+    artifacts: checksum
 release:
   extra_files:
     - glob: "terraform-registry-manifest.json"
