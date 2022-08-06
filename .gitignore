@@ -39,3 +39,4 @@ terraform.rc
 terraform
 dist/
 cosign.key
+gpg.pub

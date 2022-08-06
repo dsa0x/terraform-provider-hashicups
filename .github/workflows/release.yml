@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           gpg --armor --export $GPG_KEYID > gpg.pub
-          echo gpg.pub
+          cat gpg.pub
         env:
           GPG_KEYID: ${{ steps.import_gpg.outputs.keyid }}
       - name: Run GoReleaser
