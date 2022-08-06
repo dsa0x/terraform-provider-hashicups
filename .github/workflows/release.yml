@@ -37,8 +37,8 @@ jobs:
         run: |
           gpg --armor --export $GPG_KEYID > gpg.pub
           echo gpg.pub
-      env:
-        GPG_KEYID: ${{ steps.import_gpg.outputs.keyid }}
+        env:
+          GPG_KEYID: ${{ steps.import_gpg.outputs.keyid }}
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
