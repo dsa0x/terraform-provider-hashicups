@@ -14,37 +14,37 @@ on:
   push:
     tags:
       - "v*"
-permissions:
-  contents: write
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Unshallow
         run: git fetch --prune --unshallow
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v2
         with:
-          go-version-file: "go.mod"
-          cache: true
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@main
-      - name: Check cosign install!
-        run: cosign version
-      - name: Fetch key
-        shell: bash
-        run: 'echo "$COSIGN_PRIVATE_KEY" > cosign.key'
+          go-version: 1.17
+      - name: Import GPG key
+        id: import_gpg
+        uses: hashicorp/ghaction-import-gpg@v2.1.0
         env:
-          COSIGN_PRIVATE_KEY: ${{secrets.COSIGN_PRIVATE_KEY}}
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Generate gpg public key
+        shell: bash
+        run: |
+          echo -n "$GPG_PRIVATE_KEY" | gpg --import
+          echo -n "$GPG_PRIVATE_KEY" | gpg --export --armor > gpg.pub
+          echo gpg.pub
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v3.0.0
+        uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
           args: release --rm-dist
         env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          COSIGN_PRIVATE_KEY: cosign.key
-          # GitHub sets this automatically
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
