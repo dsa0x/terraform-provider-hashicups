@@ -34,9 +34,7 @@ jobs:
           passphrase: ${{ secrets.TEST_GPG_PASSPHRASE }}
       - name: Generate gpg public key
         shell: bash
-        run: |
-          gpg --armor --export $GPG_KEYID > gpg.pub
-          cat gpg.pub
+        run: gpg --armor --export $GPG_KEYID > gpg.pub
         env:
           GPG_KEYID: ${{ steps.import_gpg.outputs.keyid }}
       - name: Run GoReleaser
